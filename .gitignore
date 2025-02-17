@@ -1,0 +1,27 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore CSV database files
+*.csv
+
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore log files
+*.log
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore test and coverage reports
+.coverage
+pytest_cache/
+__tests__/test_*
+
+# Ignore system files
+.DS_Store
+Thumbs.db
