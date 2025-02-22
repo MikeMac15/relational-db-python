@@ -1,15 +1,15 @@
 class Field:
-    def __init__(self, name, field_type, unique = False, nullable = False, default=None, max_size=None, min_size=None, foreign_key=None):
+    def __init__(self, name, type, unique = False, nullable = False, default=None, max_size=None, min_size=None, foreign_key=None):
         '''
         foreign_key = (reference_table, reference_column)
         '''
         self.name = name
-        self.type = field_type
+        self.type = type
         self.unique = unique
         self.nullable = nullable
         self.default = default
-        self.max_size = max_size if field_type == "str" else None
-        self.min_size = min_size if field_type == "str" else None
+        self.max_size = max_size if type == "str" else None
+        self.min_size = min_size if type == "str" else None
         self.foreign_key = foreign_key
     
     def to_dict(self):

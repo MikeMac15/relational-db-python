@@ -1,0 +1,35 @@
+{
+    "table_name": "clubs",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "unique": true,
+            "nullable": false,
+            "default": null
+        },
+        {
+            "name": "name",
+            "type": "str",
+            "unique": true,
+            "nullable": false,
+            "default": null,
+            "max_size": 20
+        },
+        {
+            "name": "type",
+            "type": "str",
+            "unique": false,
+            "nullable": false,
+            "default": null,
+            "max_size": 6
+        },
+        {
+            "name": "distance",
+            "type": "int",
+            "unique": false,
+            "nullable": false,
+            "default": null
+        }
+    ]
+}

@@ -7,14 +7,15 @@ from my_db.commands.INSERT.insert_command import INSERT
 # from my_db.commands.SELECT.select_command import SELECT
 # from my_db.commands.DELETE.delete_command import DELETE
 # from my_db.commands.UPDATE.update_command import UPDATE
-from my_db.commands.TABLE.read_schema import read_schema  # Utility function to read schemas
+from cli.commands.cli_insert import cli_insert
+from my_db.helpers.read_db import read_db
 
-SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
-DB_DIR = Path(__file__).resolve().parent.parent / "databases"
+SCHEMA_DIR = Path(__file__).resolve().parent.parent / "my_db/schemas"
+DB_DIR = Path(__file__).resolve().parent.parent / "my_db/databases"
 
 def list_tables():
     """List all available tables in the database."""
-    tables = [f.stem for f in SCHEMA_DIR.glob("*.schema.json")]
+    tables = [f.stem for f in DB_DIR.glob("*.db")]
     if tables:
         print("\nAvailable Tables:")
         for table in tables:
@@ -22,63 +23,59 @@ def list_tables():
     else:
         print("\nNo tables found.")
 
+def view_table():
+    tables = [f.stem for f in DB_DIR.glob("*.db")]
+    if tables:
+        print("\nAvailable Tables:")
+        for t, table in enumerate(tables):
+            print(f"{t} - {table}")
+    idx = int(input("\nTable to view: "))
+    if idx not in range(len(tables)):
+        print('invalid choice')
+    else:
+        read_db(tables[idx])
+
+
 def cli_create_table():
     """CLI interface for creating a table."""
-    table_name = input("\nEnter table name: ").strip()
+    table_name = input("\nEnter table name: ").strip().lower()
     fields = []
-
-    print("Define fields (Type 'done' when finished).")
+    count = 1
+    print("\nDefine table columns:")
     while True:
-        field_name = input("Field name: ").strip()
-        if field_name.lower() == "done":
-            break
+        print(f'\nColumn {count}:')
+        if count == 1:
+            pk = input('Make column 1 a unique primary key?(y/n): ')
+            if pk.lower() == 'y':
+                count += 1
+                fields.append(Field('id', 'int', True, False, None))
+                continue 
+        column_name = input("Name: ").strip().lower()
         
-        field_type = input("Field type (int/str): ").strip()
-        if field_type not in ["int", "str"]:
+        
+        cloumn_type = input("Type (int/str): ").strip().lower()
+        if cloumn_type not in ["int", "str"]:
             print("Invalid type. Use 'int' or 'str'.")
             continue
         
         max_size = None
-        if field_type == "str":
+        if cloumn_type == "str":
             max_size = int(input("Max size: ").strip())
         
         unique = input("Unique? (y/n): ").strip().lower() == "y"
         nullable = input("Nullable? (y/n): ").strip().lower() == "y"
-        default = input("Default value (press enter for none): ").strip() or None
+        default = input("Default value (press enter for none): ").strip().lower() or None
 
-        fields.append(Field(field_name, field_type, unique, nullable, default, max_size))
+        fields.append(Field(column_name, cloumn_type, unique, nullable, default, max_size))
+        keep_going = input('\nWould you like to add another field?(y/n): ')
+        if keep_going.lower() == 'n':
+            break 
+        count+=1
 
-    create_table(table_name, fields)
-    print(f"\n✅ Table '{table_name}' created successfully!")
-
-def cli_insert():
-    """CLI interface for inserting a record."""
-    table_name = input("\nEnter table name: ").strip()
-    _, fields = read_schema(table_name)
-
-    if not fields:
-        print(f"\n❌ Table '{table_name}' does not exist.")
-        return
+    print('\n', create_table(table_name, fields))
     
-    values = {}
-    for field in fields:
-        value = input(f"Enter value for '{field.name}' (Type: {field.type}): ").strip()
-        
-        if value == "" and field.default is not None:
-            values[field.name] = field.default
-        elif value == "" and not field.nullable:
-            print(f"\n❌ '{field.name}' cannot be NULL!")
-            return
-        elif field.type == "int":
-            values[field.name] = int(value)
-        else:
-            values[field.name] = value
-    
-    new_id = INSERT(values, table_name)
-    if new_id != -1:
-        print(f"\n✅ Record inserted successfully with ID {new_id}!")
-    else:
-        print("\n❌ Error inserting record.")
+
+
 
 def cli_select():
     """CLI interface for selecting records."""
@@ -95,8 +92,8 @@ def cli_select():
 
 def cli_delete():
     """CLI interface for deleting a record."""
-    table_name = input("\nEnter table name: ").strip()
-    record_id = input("Enter ID of record to delete: ").strip()
+    table_name = input("\nEnter table name: ").strip().lower()
+    record_id = int(input("Enter ID of record to delete: ").strip())
 
     # if DELETE(table_name, int(record_id)):
     #     print("\n✅ Record deleted successfully!")
@@ -107,30 +104,33 @@ def main():
     """CLI menu for database commands."""
     while True:
         print("\n🛠️ SimpleDB CLI 🛠️")
-        print("1. Create a Table")
-        print("2. Insert a Record")
-        print("3. Select Records")
-        print("4. Delete a Record")
-        print("5. List Tables")
-        print("6. Exit")
+        print("(C) Create a Table")
+        print("(I) Insert a Record")
+        print("(S) Select Records")
+        print("(D) Delete a Record")
+        print("(L) List Tables")
+        print("(V) View Table")
+        print("(E) Exit")
         
-        choice = input("\nEnter your choice: ").strip()
+        choice = input("\nEnter your choice: ").strip().lower()
         
-        if choice == "1":
+        if choice == "c":
             cli_create_table()
-        elif choice == "2":
+        elif choice == "i":
             cli_insert()
-        elif choice == "3":
+        elif choice == "s":
             cli_select()
-        elif choice == "4":
+        elif choice == "d":
             cli_delete()
-        elif choice == "5":
+        elif choice == "l":
             list_tables()
-        elif choice == "6":
-            print("\n👋 Exiting CLI. Goodbye!")
+        elif choice == "v":
+            view_table()
+        elif choice == "e":
+            print("\n Exiting CLI. Goodbye!")
             break
         else:
-            print("\n❌ Invalid choice. Please try again.")
+            print("\n Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()

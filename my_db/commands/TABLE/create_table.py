@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from my_db.classes.field_class import Field
 
 # nav out of commands dir to get to my_db
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -18,10 +19,14 @@ def create_table(table_name:str , fields: list):
     db_file = os.path.join(DB_DIR, f"{table_name}.db")
 
     try:
+        field_of_fields = []
+
+        for x in fields:
+            field_of_fields.append(x.to_dict())
 
         schema = {
             "table_name": table_name,
-            fields: [field.todict() for field in fields]
+            "fields": field_of_fields
         }
 
 
