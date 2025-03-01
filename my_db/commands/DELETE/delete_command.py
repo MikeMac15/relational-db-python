@@ -1,17 +1,26 @@
+import struct
 from my_db.helpers.get_db_files import get_db_idx_file
-def DELETE(table_name:str, where:dict):
-    db_file, idx_file = get_db_idx_file(table_name)
+def DELETE(table_name:str, where:dict) -> bool:
+    try:
+        db_file, idx_file = get_db_idx_file(table_name)
 
-    search_id = where.get("id")
-    #DELETE Error (1)
-    if search_id is None:
-        print('currently I am only supporting IDX based deletion to minimize accidental deletions: DELETE(1)')
-        return
-    
-    record_start_offset = binary_search_idx(table_name, idx)
-    #DELETE Error (2)
-    if record_start_offset == -1:
-        print('record not found: DELETE(2)')
-        return
-    
-    with open(db_file)
+        search_id = where.get("id")
+        #DELETE Error (1)
+        if search_id is None:
+            print('DELETE(1): currently I am only supporting IDX based deletion to minimize accidental deletions')
+            return False
+        
+        record_start_offset = binary_search_idx(table_name, search_id)
+        #DELETE Error (2)
+        if record_start_offset == -1:
+            print('DELETE(2): record not found')
+            return False
+        
+        with open(db_file, 'r+b') as file:
+            file.seek(record_start_offset)
+            file.write(struct.pack('i',1))
+        
+        print(f"Record{search_id} marked for deletion")
+        return True
+    except Exception as e:
+        print('DELETE (e):',e)

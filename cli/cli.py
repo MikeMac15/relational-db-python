@@ -4,10 +4,11 @@ from pathlib import Path
 from my_db.classes.field_class import Field
 from my_db.commands.TABLE.create_table import create_table
 from my_db.commands.INSERT.insert_command import INSERT
-# from my_db.commands.SELECT.select_command import SELECT
+from my_db.commands.SELECT.select_command import SELECT
 # from my_db.commands.DELETE.delete_command import DELETE
 # from my_db.commands.UPDATE.update_command import UPDATE
 from cli.commands.cli_insert import cli_insert
+from cli.commands.cli_select import cli_select
 from my_db.helpers.read_db import read_db
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent / "my_db/schemas"
@@ -33,7 +34,8 @@ def view_table():
     if idx not in range(len(tables)):
         print('invalid choice')
     else:
-        read_db(tables[idx])
+        # read_db(tables[idx])
+        cli_select()
 
 
 def cli_create_table():
@@ -77,18 +79,6 @@ def cli_create_table():
 
 
 
-def cli_select():
-    """CLI interface for selecting records."""
-    table_name = input("\nEnter table name: ").strip()
-    # results = SELECT(table_name)
-    results = None
-    if not results:
-        print("\nNo records found.")
-        return
-    
-    print("\n🔍 Records Found:")
-    for record in results:
-        print(record)
 
 def cli_delete():
     """CLI interface for deleting a record."""

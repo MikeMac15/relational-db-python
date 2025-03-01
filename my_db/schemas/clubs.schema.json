@@ -22,7 +22,7 @@
             "unique": false,
             "nullable": false,
             "default": null,
-            "max_size": 6
+            "max_size": 10
         },
         {
             "name": "distance",
