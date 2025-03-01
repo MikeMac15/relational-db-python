@@ -3,4 +3,8 @@
 Changed db from .csv to .db binary
 Also added cli
 {Broken}
-    [ ] Must fix import issues (insert.py)
+    [ X ] Must fix import issues (insert.py)
+
+[2/28/25]
+[] ensure all data is stored in db lowercase only
+[] work on delete
