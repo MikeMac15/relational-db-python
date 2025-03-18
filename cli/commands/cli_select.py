@@ -4,7 +4,7 @@ from my_db.helpers.read_schema import read_schema
 def cli_select():
     """CLI interface for selecting records."""
     table_name = input("\nEnter table name: ").strip()
-    select_all = input(f'Select all from {table_name}?')
+    select_all = input(f'Select all from {table_name}? (y/n): ').lower()
     if select_all == 'y':
         results = SELECT(table_name)
     else:
@@ -28,5 +28,4 @@ def cli_select():
         return
     
     print("\n🔍 Records Found:")
-    for record in results:
-        print(record)
+    return results

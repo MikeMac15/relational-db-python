@@ -1,11 +1,12 @@
 import argparse
 import json
 from pathlib import Path
+from cli.commands.cli_print_data import print_data
 from my_db.classes.field_class import Field
 from my_db.commands.TABLE.create_table import create_table
 from my_db.commands.INSERT.insert_command import INSERT
 from my_db.commands.SELECT.select_command import SELECT
-# from my_db.commands.DELETE.delete_command import DELETE
+from my_db.commands.DELETE.delete_command import DELETE
 # from my_db.commands.UPDATE.update_command import UPDATE
 from cli.commands.cli_insert import cli_insert
 from cli.commands.cli_select import cli_select
@@ -35,7 +36,8 @@ def view_table():
         print('invalid choice')
     else:
         # read_db(tables[idx])
-        cli_select()
+        data = cli_select()
+        print_data(data)
 
 
 def cli_create_table():
@@ -85,10 +87,10 @@ def cli_delete():
     table_name = input("\nEnter table name: ").strip().lower()
     record_id = int(input("Enter ID of record to delete: ").strip())
 
-    # if DELETE(table_name, int(record_id)):
-    #     print("\n✅ Record deleted successfully!")
-    # else:
-    #     print("\n❌ Record not found.")
+    if DELETE(table_name, {'id':int(record_id)}):
+        print("\nRecord deleted successfully!")
+    else:
+        print("\nRecord not found.")
 
 def main():
     """CLI menu for database commands."""

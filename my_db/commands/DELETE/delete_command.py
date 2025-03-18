@@ -1,5 +1,6 @@
 import struct
 from my_db.helpers.get_db_files import get_db_idx_file
+from my_db.helpers.binary_search_idx import binary_search_idx
 def DELETE(table_name:str, where:dict) -> bool:
     try:
         db_file, idx_file = get_db_idx_file(table_name)
@@ -10,7 +11,8 @@ def DELETE(table_name:str, where:dict) -> bool:
             print('DELETE(1): currently I am only supporting IDX based deletion to minimize accidental deletions')
             return False
         
-        record_start_offset = binary_search_idx(table_name, search_id)
+        record_start_offset = binary_search_idx(idx_file, search_id)
+        
         #DELETE Error (2)
         if record_start_offset == -1:
             print('DELETE(2): record not found')
