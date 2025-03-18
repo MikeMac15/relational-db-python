@@ -1,7 +1,21 @@
 import struct
 from my_db.helpers.get_db_files import get_db_idx_file
 from my_db.helpers.binary_search_idx import binary_search_idx
+
 def DELETE(table_name:str, where:dict) -> bool:
+    """
+        Deletes a record from the specified table based on the given condition.
+        Args:
+            table_name (str): The name of the table from which the record should be deleted.
+            where (dict): A dictionary specifying the condition for deletion. Currently, only supports deletion based on the "id" key.
+        Returns:
+            bool: True if the record was successfully marked for deletion, False otherwise.
+        Notes:
+            - The function currently supports only IDX based deletion to minimize accidental deletions.
+            - The record is not physically removed from the database but is marked for deletion by writing a specific flag.
+        Raises:
+            Exception: If any error occurs during the deletion process, it will be caught and printed.
+    """
     try:
         db_file, idx_file = get_db_idx_file(table_name)
 

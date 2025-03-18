@@ -1,4 +1,14 @@
 from my_db.helpers.read_schema import read_schema
+"""
+CLI interface for inserting a record into a specified table.
+Prompts the user to enter the table name and then retrieves the schema for that table.
+For each field in the schema (excluding the 'id' field), the user is prompted to enter a value.
+If a value is not provided and the field has a default value, the default value is used.
+If a value is not provided and the field is not nullable, an error message is displayed and the function returns.
+The values are then passed to the INSERT command to insert the record into the table.
+Returns:
+    None
+"""
 from my_db.commands.INSERT.insert_command import INSERT
 
 def cli_insert():

@@ -68,8 +68,9 @@ def SELECT(table_name: str, where: dict | None = None) -> list:
             data = struct.unpack(binary_format, chunk)
             deletion_flag = data[0]
 
+             # Skip deleted records
             if deletion_flag == 1:
-                continue  # Skip deleted records
+                continue 
 
             record = unpack_record(data, fields)
 

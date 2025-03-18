@@ -1,9 +1,20 @@
 import os
 import struct
 def binary_search_idx(idx_file:str,target_idx:int) -> int:
-    
+
+    """
+    Performs a binary search on a binary index file to find the offset of the target index.
+    Args:
+        idx_file (str): The path to the binary index file.
+        target_idx (int): The index value to search for.
+    Returns:
+        int: The offset corresponding to the target index if found, otherwise -1.
+    Raises:
+        Exception: If there is an error reading the file or unpacking the data.
+    """
+
     file_size = struct.calcsize('ii')
-    
+
     try:
         with open(idx_file, 'rb') as file:
             file.seek(0,os.SEEK_END)
